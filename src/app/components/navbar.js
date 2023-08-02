@@ -1,7 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  let router = useRouter();
+  const handleSignOut = () => {
+    localStorage.removeItem("userDetailsStorage");
+    router.push("/login");
+  };
   return (
     <>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -28,8 +36,8 @@ const Navbar = () => {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth="2"
                 d="M1 1h15M1 7h15M1 13h15"
               />
@@ -55,7 +63,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <button>Signout</button>
+                <button onClick={handleSignOut}>Signout</button>
               </li>
             </ul>
           </div>

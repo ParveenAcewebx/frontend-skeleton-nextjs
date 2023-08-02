@@ -9,7 +9,9 @@ import axios from "axios";
 const Blog = () => {
   const router = useRouter();
   const [data, setData] = useState([]);
-  const userDetails = localStorage.getItem("userDetailsStorage") || "";
+  if (typeof window !== "undefined") {
+    var userDetails = window.localStorage.getItem("userDetailsStorage") || "";
+  }
 
   const fetchData = async () => {
     const getUserDetails = JSON.parse(
