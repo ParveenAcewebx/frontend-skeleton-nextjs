@@ -1,9 +1,9 @@
 "use client";
 import { createContext, useMemo } from "react";
 
-export const AuthContext = createContext(null);
+export const AuthContext = createContext();
 
-export function AuthContextProvider({ children }) {
+export function AuthContextProvider({ children, value }) {
   const isLogin = () => {
     if (typeof window !== "undefined") {
       const userDetails = localStorage.getItem("userDetailsStorage") || "";
@@ -28,8 +28,9 @@ export function AuthContextProvider({ children }) {
     () => ({
       getLoginUser,
       isLogin,
+      ...value,
     }),
-    []
+    [value]
   );
 
   return (

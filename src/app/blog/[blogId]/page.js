@@ -3,7 +3,7 @@ import Navbar from "@/components/navbar";
 import React from "react";
 import axios from "axios";
 
-async function getBlog(blogid) {
+async function GetBlog(blogid) {
   // Wait for the playlists
   const accessToken =
     typeof window !== "undefined"
@@ -23,7 +23,7 @@ async function getBlog(blogid) {
 }
 const SingleBlog = async (request) => {
   const { blogId } = request.params;
-  let data = await getBlog(blogId);
+  let data = await GetBlog(blogId);
 
   return (
     <>

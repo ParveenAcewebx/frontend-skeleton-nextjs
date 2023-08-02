@@ -12,10 +12,13 @@ const Blog = () => {
   const { isLogin, getLoginUser } = useContext(AuthContext);
   const router = useRouter();
   const [data, setData] = useState([]);
-  let userDetails = isLogin();
-
+  if (typeof window !== "undefined") {
+    var userDetails = localStorage.getItem("userDetailsStorage") || "";
+  }
   const fetchData = async () => {
-    const getUserDetails = getLoginUser();
+    const getUserDetails = JSON.parse(
+      window.localStorage.getItem("userDetailsStorage") || "{}"
+    );
     let accessToken = getUserDetails.accessToken;
     const result = await axios.get(
       "https://api.virtruelguides.com/api/v1.0.0/auth/getVlogData",
@@ -30,8 +33,7 @@ const Blog = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  if (userDetails) {
+  if (userDetails !== "") {
     return (
       <>
         <Navbar />
