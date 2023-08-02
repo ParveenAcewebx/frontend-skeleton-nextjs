@@ -2,23 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "../components/navbar";
+import Navbar from "../../components/navbar";
 import Link from "next/link";
 import axios from "axios";
+import { AuthContext } from "@/components/context";
+import { useContext } from "react";
 
 const Blog = () => {
+  const { isLogin, getLoginUser } = useContext(AuthContext);
   const router = useRouter();
   const [data, setData] = useState([]);
-  if (typeof window !== "undefined") {
-    var userDetails = window.localStorage.getItem("userDetailsStorage") || "";
-  }
+  let userDetails = isLogin();
 
   const fetchData = async () => {
-    const getUserDetails = JSON.parse(
-      localStorage.getItem("userDetailsStorage") || "{}"
-    );
+    const getUserDetails = getLoginUser();
     let accessToken = getUserDetails.accessToken;
-
     const result = await axios.get(
       "https://api.virtruelguides.com/api/v1.0.0/auth/getVlogData",
       {
@@ -29,12 +27,11 @@ const Blog = () => {
     );
     setData(result.data.data);
   };
-
   useEffect(() => {
     fetchData();
   }, []);
 
-  if (userDetails !== "") {
+  if (userDetails) {
     return (
       <>
         <Navbar />

@@ -13,7 +13,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Navbar from "../components/navbar";
+import Navbar from "../../components/navbar";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -26,6 +26,7 @@ export default function Login() {
 
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [loginError, setLoginError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,28 +34,32 @@ export default function Login() {
       email,
       password,
     };
-    console.log("inputs", inputs);
 
-    let result = await axios.post(
-      `https://api.virtruelguides.com/api/v1.0.0/auth/login/`,
-      inputs
-    );
-    console.log("result", result);
-    const accessToken = result.data.data.accessToken;
-    localStorage.setItem(
-      "userDetailsStorage",
-      JSON.stringify({
-        ...result.data.data,
-        id: result.data.data.id,
-        accessToken,
-      })
-    );
-    router.push("/blog");
+    try {
+      let result = await axios.post(
+        `https://api.virtruelguides.com/api/v1.0.0/auth/login/`,
+        inputs
+      );
+      const accessToken = result.data.data.accessToken;
+      localStorage.setItem(
+        "userDetailsStorage",
+        JSON.stringify({
+          ...result.data.data,
+          id: result.data.data.id,
+          accessToken,
+        })
+      );
+      router.push("/blog");
+    } catch (error) {
+      console.log("error");
+      setLoginError("Invalid credentials");
+    }
   };
 
   return (
     <>
       <Navbar />
+
       <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -69,6 +74,13 @@ export default function Login() {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
+            {loginError !== "" ? (
+              <Typography component="h1" variant="h5" className="text-red-600">
+                {loginError}
+              </Typography>
+            ) : (
+              ""
+            )}
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
